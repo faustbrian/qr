@@ -45,12 +45,40 @@ final readonly class QrCode implements QrCodeInterface
         return $this->data;
     }
 
+    public function withData(string $data): self
+    {
+        return new self(
+            data: $data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
+    }
+
     /**
      * Return the text encoding used when serializing the payload.
      */
     public function getEncoding(): EncodingInterface
     {
         return $this->encoding;
+    }
+
+    public function withEncoding(EncodingInterface $encoding): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
     }
 
     /**
@@ -61,12 +89,40 @@ final readonly class QrCode implements QrCodeInterface
         return $this->errorCorrectionLevel;
     }
 
+    public function withErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
+    }
+
     /**
      * Return the target output size.
      */
     public function getSize(): int
     {
         return $this->size;
+    }
+
+    public function withSize(int $size): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
     }
 
     /**
@@ -77,12 +133,40 @@ final readonly class QrCode implements QrCodeInterface
         return $this->margin;
     }
 
+    public function withMargin(int $margin): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
+    }
+
     /**
      * Return the block-size rounding strategy for matrix adaptation.
      */
     public function getRoundBlockSizeMode(): RoundBlockSizeMode
     {
         return $this->roundBlockSizeMode;
+    }
+
+    public function withRoundBlockSizeMode(RoundBlockSizeMode $roundBlockSizeMode): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
     }
 
     /**
@@ -93,11 +177,39 @@ final readonly class QrCode implements QrCodeInterface
         return $this->foregroundColor;
     }
 
+    public function withForegroundColor(ColorInterface $foregroundColor): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $foregroundColor,
+            backgroundColor: $this->backgroundColor,
+        );
+    }
+
     /**
      * Return the background color used behind the symbol.
      */
     public function getBackgroundColor(): ColorInterface
     {
         return $this->backgroundColor;
+    }
+
+    public function withBackgroundColor(ColorInterface $backgroundColor): self
+    {
+        return new self(
+            data: $this->data,
+            encoding: $this->encoding,
+            errorCorrectionLevel: $this->errorCorrectionLevel,
+            size: $this->size,
+            margin: $this->margin,
+            roundBlockSizeMode: $this->roundBlockSizeMode,
+            foregroundColor: $this->foregroundColor,
+            backgroundColor: $backgroundColor,
+        );
     }
 }

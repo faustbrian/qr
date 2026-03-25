@@ -44,9 +44,35 @@ final readonly class Color implements ColorInterface
         return $this->red;
     }
 
+    /**
+     * @param int<0, 255> $red
+     */
+    public function withRed(int $red): self
+    {
+        return new self(
+            red: $red,
+            green: $this->green,
+            blue: $this->blue,
+            alpha: $this->alpha,
+        );
+    }
+
     public function getGreen(): int
     {
         return $this->green;
+    }
+
+    /**
+     * @param int<0, 255> $green
+     */
+    public function withGreen(int $green): self
+    {
+        return new self(
+            red: $this->red,
+            green: $green,
+            blue: $this->blue,
+            alpha: $this->alpha,
+        );
     }
 
     public function getBlue(): int
@@ -54,9 +80,35 @@ final readonly class Color implements ColorInterface
         return $this->blue;
     }
 
+    /**
+     * @param int<0, 255> $blue
+     */
+    public function withBlue(int $blue): self
+    {
+        return new self(
+            red: $this->red,
+            green: $this->green,
+            blue: $blue,
+            alpha: $this->alpha,
+        );
+    }
+
     public function getAlpha(): int
     {
         return $this->alpha;
+    }
+
+    /**
+     * @param int<0, 127> $alpha
+     */
+    public function withAlpha(int $alpha): self
+    {
+        return new self(
+            red: $this->red,
+            green: $this->green,
+            blue: $this->blue,
+            alpha: $alpha,
+        );
     }
 
     /**

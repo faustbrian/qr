@@ -36,6 +36,19 @@ $result = new Builder(
 file_put_contents('qr.png', $result->getString());
 ```
 
+Public immutable value objects also expose additive `with*` methods when
+you want to derive a modified copy without going back through the builder:
+
+```php
+use Cline\Qr\Color\Color;
+use Cline\Qr\QrCode;
+
+$qrCode = (new QrCode('Hello world'))
+    ->withSize(512)
+    ->withMargin(4)
+    ->withForegroundColor(new Color(12, 34, 56));
+```
+
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.

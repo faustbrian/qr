@@ -35,12 +35,32 @@ final readonly class Logo implements LogoInterface
         return $this->path;
     }
 
+    public function withPath(string $path): self
+    {
+        return new self(
+            path: $path,
+            resizeToWidth: $this->resizeToWidth,
+            resizeToHeight: $this->resizeToHeight,
+            punchoutBackground: $this->punchoutBackground,
+        );
+    }
+
     /**
      * Return the requested target width, if one was provided.
      */
     public function getResizeToWidth(): ?int
     {
         return $this->resizeToWidth;
+    }
+
+    public function withResizeToWidth(?int $resizeToWidth): self
+    {
+        return new self(
+            path: $this->path,
+            resizeToWidth: $resizeToWidth,
+            resizeToHeight: $this->resizeToHeight,
+            punchoutBackground: $this->punchoutBackground,
+        );
     }
 
     /**
@@ -51,11 +71,31 @@ final readonly class Logo implements LogoInterface
         return $this->resizeToHeight;
     }
 
+    public function withResizeToHeight(?int $resizeToHeight): self
+    {
+        return new self(
+            path: $this->path,
+            resizeToWidth: $this->resizeToWidth,
+            resizeToHeight: $resizeToHeight,
+            punchoutBackground: $this->punchoutBackground,
+        );
+    }
+
     /**
      * Return whether the logo should punch out the QR background beneath it.
      */
     public function getPunchoutBackground(): bool
     {
         return $this->punchoutBackground;
+    }
+
+    public function withPunchoutBackground(bool $punchoutBackground): self
+    {
+        return new self(
+            path: $this->path,
+            resizeToWidth: $this->resizeToWidth,
+            resizeToHeight: $this->resizeToHeight,
+            punchoutBackground: $punchoutBackground,
+        );
     }
 }

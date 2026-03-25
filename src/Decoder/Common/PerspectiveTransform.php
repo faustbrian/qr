@@ -35,15 +35,15 @@ final class PerspectiveTransform
      * @param float $a33 matrix coefficient
      */
     private function __construct(
-        private $a11,
-        private $a21,
-        private $a31,
-        private $a12,
-        private $a22,
-        private $a32,
-        private $a13,
-        private $a23,
-        private $a33,
+        private readonly float $a11,
+        private readonly float $a21,
+        private readonly float $a31,
+        private readonly float $a12,
+        private readonly float $a22,
+        private readonly float $a32,
+        private readonly float $a13,
+        private readonly float $a23,
+        private readonly float $a33,
     ) {}
 
     /**

@@ -29,7 +29,7 @@ use Cline\Qr\Decoder\Common\BitMatrix;
 abstract class AbstractBinarizer
 {
     protected function __construct(
-        private $source,
+        private readonly AbstractLuminanceSource $source,
     ) {}
 
     /**

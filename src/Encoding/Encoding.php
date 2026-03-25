@@ -66,4 +66,9 @@ final readonly class Encoding implements EncodingInterface, Stringable
     {
         return $this->value;
     }
+
+    public function withValue(string $value): self
+    {
+        return new self($value);
+    }
 }

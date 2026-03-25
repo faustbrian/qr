@@ -39,4 +39,9 @@ final readonly class OpenSans implements FontInterface
     {
         return $this->size;
     }
+
+    public function withSize(int $size): self
+    {
+        return new self($size);
+    }
 }

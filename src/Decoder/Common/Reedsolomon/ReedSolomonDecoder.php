@@ -30,7 +30,7 @@ final class ReedSolomonDecoder
      * @param GenericGF $field finite field used for all error-correction math
      */
     public function __construct(
-        private $field,
+        private readonly GenericGF $field,
     ) {}
 
     /**

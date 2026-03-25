@@ -43,12 +43,34 @@ final readonly class Label implements LabelInterface
         return $this->text;
     }
 
+    public function withText(string $text): self
+    {
+        return new self(
+            text: $text,
+            font: $this->font,
+            alignment: $this->alignment,
+            margin: $this->margin,
+            textColor: $this->textColor,
+        );
+    }
+
     /**
      * Return the font configuration used to measure and draw the label.
      */
     public function getFont(): FontInterface
     {
         return $this->font;
+    }
+
+    public function withFont(FontInterface $font): self
+    {
+        return new self(
+            text: $this->text,
+            font: $font,
+            alignment: $this->alignment,
+            margin: $this->margin,
+            textColor: $this->textColor,
+        );
     }
 
     /**
@@ -59,6 +81,17 @@ final readonly class Label implements LabelInterface
         return $this->alignment;
     }
 
+    public function withAlignment(LabelAlignment $alignment): self
+    {
+        return new self(
+            text: $this->text,
+            font: $this->font,
+            alignment: $alignment,
+            margin: $this->margin,
+            textColor: $this->textColor,
+        );
+    }
+
     /**
      * Return the margin around the rendered label text.
      */
@@ -67,11 +100,33 @@ final readonly class Label implements LabelInterface
         return $this->margin;
     }
 
+    public function withMargin(MarginInterface $margin): self
+    {
+        return new self(
+            text: $this->text,
+            font: $this->font,
+            alignment: $this->alignment,
+            margin: $margin,
+            textColor: $this->textColor,
+        );
+    }
+
     /**
      * Return the label text color.
      */
     public function getTextColor(): ColorInterface
     {
         return $this->textColor;
+    }
+
+    public function withTextColor(ColorInterface $textColor): self
+    {
+        return new self(
+            text: $this->text,
+            font: $this->font,
+            alignment: $this->alignment,
+            margin: $this->margin,
+            textColor: $textColor,
+        );
     }
 }

@@ -16,6 +16,7 @@ use Cline\Qr\Generator\Renderer\Path\Path;
  *
  * The singleton keeps this preset allocation-free because its geometry never
  * changes. Renderers can reuse the same instance across many symbols.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class PointyEye implements EyeInterface
@@ -60,10 +61,10 @@ final class PointyEye implements EyeInterface
     {
         return new Path()
             ->move(1.5, 0)
-            ->ellipticArc(1.5, 1.5, 0., false, true, 0., 1.5)
-            ->ellipticArc(1.5, 1.5, 0., false, true, -1.5, 0.)
-            ->ellipticArc(1.5, 1.5, 0., false, true, 0., -1.5)
-            ->ellipticArc(1.5, 1.5, 0., false, true, 1.5, 0.)
+            ->ellipticArc(1.5, 1.5, 0.0, false, true, 0.0, 1.5)
+            ->ellipticArc(1.5, 1.5, 0.0, false, true, -1.5, 0.0)
+            ->ellipticArc(1.5, 1.5, 0.0, false, true, 0.0, -1.5)
+            ->ellipticArc(1.5, 1.5, 0.0, false, true, 1.5, 0.0)
             ->close();
     }
 }

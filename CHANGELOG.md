@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Promoted additional immutable decoder and renderer constructor state to
+  `readonly` so low-level value objects and helpers enforce their
+  write-once semantics in PHP.
 - Fixed PHP 8.5 decoder compatibility for unlimited-memory environments
   by honoring `memory_limit=-1` in the Imagick luminance source and
   replacing grayscale averaging paths that relied on implicit float-to-int
@@ -43,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Abstract*`.
 
 ### Added
+- Added immutable `with*` methods to the public QR, logo, label, font,
+  margin, color, and encoding value objects so callers can derive
+  modified copies without mutating state or rebuilding from scratch.
 - Expanded PHPDoc across the remaining result wrappers and writer
   interfaces to match the higher-detail package documentation standard.
 - Expanded PHPDoc across GD/image-format writers and core result types

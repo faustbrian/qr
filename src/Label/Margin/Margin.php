@@ -35,12 +35,32 @@ final readonly class Margin implements MarginInterface
         return $this->top;
     }
 
+    public function withTop(int $top): self
+    {
+        return new self(
+            top: $top,
+            right: $this->right,
+            bottom: $this->bottom,
+            left: $this->left,
+        );
+    }
+
     /**
      * Return the right margin.
      */
     public function getRight(): int
     {
         return $this->right;
+    }
+
+    public function withRight(int $right): self
+    {
+        return new self(
+            top: $this->top,
+            right: $right,
+            bottom: $this->bottom,
+            left: $this->left,
+        );
     }
 
     /**
@@ -51,12 +71,32 @@ final readonly class Margin implements MarginInterface
         return $this->bottom;
     }
 
+    public function withBottom(int $bottom): self
+    {
+        return new self(
+            top: $this->top,
+            right: $this->right,
+            bottom: $bottom,
+            left: $this->left,
+        );
+    }
+
     /**
      * Return the left margin.
      */
     public function getLeft(): int
     {
         return $this->left;
+    }
+
+    public function withLeft(int $left): self
+    {
+        return new self(
+            top: $this->top,
+            right: $this->right,
+            bottom: $this->bottom,
+            left: $left,
+        );
     }
 
     /**

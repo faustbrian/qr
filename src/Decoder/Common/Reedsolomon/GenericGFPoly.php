@@ -40,7 +40,7 @@ final class GenericGFPoly
      *                                  or the polynomial is malformed
      */
     public function __construct(
-        private $field,
+        private readonly GenericGF $field,
         $coefficients,
     ) {
         if (count($coefficients) === 0) {

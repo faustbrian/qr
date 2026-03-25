@@ -33,8 +33,8 @@ final class FinderPattern extends AbstractResultPoint
     public function __construct(
         $posX,
         $posY,
-        private $estimatedModuleSize,
-        private $count = 1,
+        private readonly int|float $estimatedModuleSize,
+        private readonly int $count = 1,
     ) {
         parent::__construct($posX, $posY);
     }

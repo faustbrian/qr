@@ -30,8 +30,8 @@ final class ErrorCorrectionLevel
     private static ?array $FOR_BITS = null;
 
     public function __construct(
-        private $bits,
-        private $ordinal = 0,
+        private readonly int $bits,
+        private readonly int $ordinal = 0,
     ) {}
 
     /**

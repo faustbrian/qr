@@ -59,9 +59,9 @@ final class GenericGF
      * @param int $generatorBase generator polynomial offset used by the codec
      */
     public function __construct(
-        private $primitive,
-        private $size,
-        private $generatorBase,
+        private readonly int $primitive,
+        private readonly int $size,
+        private readonly int $generatorBase,
     ) {
         $x = 1;
 

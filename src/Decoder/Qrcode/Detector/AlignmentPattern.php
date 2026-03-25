@@ -32,7 +32,7 @@ final class AlignmentPattern extends AbstractResultPoint
     public function __construct(
         $posX,
         $posY,
-        private $estimatedModuleSize,
+        private readonly int|float $estimatedModuleSize,
     ) {
         parent::__construct($posX, $posY);
     }

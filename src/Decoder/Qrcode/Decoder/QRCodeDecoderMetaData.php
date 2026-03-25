@@ -24,7 +24,7 @@ final class QRCodeDecoderMetaData
      *                       mirroring it before decode.
      */
     public function __construct(
-        private $mirrored,
+        private readonly bool $mirrored,
     ) {}
 
     /**

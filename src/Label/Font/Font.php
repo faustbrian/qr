@@ -41,12 +41,28 @@ final readonly class Font implements FontInterface
         return $this->path;
     }
 
+    public function withPath(string $path): self
+    {
+        return new self(
+            path: $path,
+            size: $this->size,
+        );
+    }
+
     /**
      * Return the configured font size in points.
      */
     public function getSize(): int
     {
         return $this->size;
+    }
+
+    public function withSize(int $size): self
+    {
+        return new self(
+            path: $this->path,
+            size: $size,
+        );
     }
 
     /**

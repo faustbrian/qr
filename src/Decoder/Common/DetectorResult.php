@@ -23,12 +23,10 @@ final class DetectorResult
 {
     /**
      * Capture the detected matrix and its supporting points.
-     * @param mixed $bits
-     * @param mixed $points
      */
     public function __construct(
-        private $bits,
-        private $points,
+        private readonly mixed $bits,
+        private readonly mixed $points,
     ) {}
 
     /**

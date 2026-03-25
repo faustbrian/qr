@@ -45,8 +45,8 @@ final class Mode
     public static $HANZI;
 
     public function __construct(
-        private $characterCountBitsForVersions,
-        private $bits,
+        private readonly array $characterCountBitsForVersions,
+        private readonly int $bits,
     ) {}
 
     /**
