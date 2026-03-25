@@ -25,6 +25,7 @@ use function fill_array;
 use function iconv;
 use function implode;
 use function intdiv;
+use function is_string;
 use function mb_convert_encoding;
 use function mb_detect_encoding;
 use function mb_detect_order;
@@ -408,7 +409,8 @@ final class DecodedBitStreamParser
                 // give a hint.
 
                 try {
-                    $encoding = mb_detect_encoding($text, $hints, true);
+                    $encodingHint = self::extractCharacterSetHint($hints);
+                    $encoding = $encodingHint ?? mb_detect_encoding($text, mb_detect_order(), true);
                 } catch (ValueError $e) {
                     $encoding = mb_detect_encoding($text, mb_detect_order(), false);
                 }
@@ -419,6 +421,24 @@ final class DecodedBitStreamParser
         }
 
         $byteSegments = array_merge($byteSegments, $readBytes);
+    }
+
+    /**
+     * Return the requested text encoding hint when one is explicitly supplied.
+     */
+    private static function extractCharacterSetHint(?array $hints): ?string
+    {
+        if ($hints === null || !array_key_exists('CHARACTER_SET', $hints)) {
+            return null;
+        }
+
+        $characterSet = $hints['CHARACTER_SET'];
+
+        if (!is_string($characterSet) || $characterSet === '') {
+            return null;
+        }
+
+        return $characterSet;
     }
 
     /**

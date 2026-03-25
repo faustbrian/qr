@@ -155,16 +155,40 @@ trait MatchesQrSnapshots
      */
     private function snapshotTestNameCandidates(string $testName): array
     {
+        $normalizedTestName = $this->normalizePestTestName($testName);
         $candidates = [$testName];
 
-        if (str_starts_with($testName, 'test_')) {
-            $suffix = mb_substr($testName, mb_strlen('test_'));
+        if ($normalizedTestName !== $testName) {
+            $candidates[] = $normalizedTestName;
+        }
 
-            if ($suffix !== false) {
-                $candidates[] = 'test'.str_replace(' ', '', ucwords(str_replace('_', ' ', $suffix)));
+        foreach ([$testName, $normalizedTestName] as $candidateName) {
+            if (!str_starts_with((string) $candidateName, 'test_')) {
+                continue;
             }
+
+            $suffix = mb_substr((string) $candidateName, mb_strlen('test_'));
+
+            if ($suffix === false) {
+                continue;
+            }
+
+            $candidates[] = 'test'.str_replace(' ', '', ucwords(str_replace('_', ' ', $suffix)));
         }
 
         return $candidates;
+    }
+
+    private function normalizePestTestName(string $testName): string
+    {
+        if (str_starts_with($testName, '__pest_evaluable_')) {
+            $normalized = mb_substr($testName, mb_strlen('__pest_evaluable_'));
+
+            if ($normalized !== false) {
+                $testName = $normalized;
+            }
+        }
+
+        return (string) preg_replace('/_{2,}/', '_', $testName);
     }
 }

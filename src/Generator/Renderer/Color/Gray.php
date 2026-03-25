@@ -9,9 +9,6 @@
 
 namespace Cline\Qr\Generator\Renderer\Color;
 
-use Cline\Qr\Generator\Internal\Exception;
-use Exception\InvalidArgumentException;
-
 use function round;
 
 /**
@@ -24,19 +21,19 @@ use function round;
  */
 final class Gray implements ColorInterface
 {
+    private readonly Percentage $gray;
+
     /**
      * @param int $gray Grayscale percentage between `0` (black) and `100`
      *                  (white)
      *
-     * @throws Exception\InvalidArgumentException if the gray value is outside
-     *                                            the supported percentage range
+     * @throws \Cline\Qr\Generator\Internal\Exception\InvalidArgumentException if the gray value is outside
+     *                                                                         the supported percentage range
      */
     public function __construct(
-        private readonly int $gray,
+        int $gray,
     ) {
-        if ($gray < 0 || $gray > 100) {
-            throw InvalidArgumentException::withMessage('Gray must be between 0 and 100');
-        }
+        $this->gray = new Percentage($gray);
     }
 
     /**
@@ -44,7 +41,7 @@ final class Gray implements ColorInterface
      */
     public function getGray(): int
     {
-        return $this->gray;
+        return $this->gray->value();
     }
 
     /**
@@ -56,7 +53,7 @@ final class Gray implements ColorInterface
     public function toRgb(): Rgb
     {
         // use 255/100 instead of 2.55 to avoid floating-point precision loss (100 * 2.55 = 254.999...)
-        $value = (int) round($this->gray * 255 / 100);
+        $value = (int) round($this->gray->asFraction() * 255);
 
         return new Rgb($value, $value, $value);
     }
@@ -66,7 +63,7 @@ final class Gray implements ColorInterface
      */
     public function toCmyk(): Cmyk
     {
-        return new Cmyk(0, 0, 0, 100 - $this->gray);
+        return new Cmyk(0, 0, 0, $this->gray->complement()->value());
     }
 
     /**

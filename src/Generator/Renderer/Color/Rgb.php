@@ -9,8 +9,7 @@
 
 namespace Cline\Qr\Generator\Renderer\Color;
 
-use Cline\Qr\Generator\Internal\Exception;
-use Exception\InvalidArgumentException;
+use Cline\Qr\Generator\Internal\Exception\InvalidArgumentException;
 
 use function min;
 use function round;
@@ -30,8 +29,8 @@ final class Rgb implements ColorInterface
      * @param int $green Green channel from `0` to `255`
      * @param int $blue  Blue channel from `0` to `255`
      *
-     * @throws Exception\InvalidArgumentException if any channel is outside the
-     *                                            8-bit range
+     * @throws InvalidArgumentException if any channel is outside the 8-bit
+     *                                  range
      */
     public function __construct(
         private readonly int $red,

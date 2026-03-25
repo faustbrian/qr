@@ -7,95 +7,53 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Generator\Renderer\Color;
-
 use Cline\Qr\Generator\Renderer\Color\Cmyk;
 use Cline\Qr\Generator\Renderer\Color\Gray;
 use Cline\Qr\Generator\Renderer\Color\Rgb;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @author Brian Faust <brian@cline.sh>
- * @internal
- */
-final class GrayTest extends TestCase
-{
-    /**
-     * Tests Gray to RGB conversion, focusing on:
-     * 1. Using 255/100 instead of 2.55 to avoid floating-point precision loss.
-     * 2. Correct application of rounding.
-     */
-    public function test_to_rgb(): void
-    {
-        // Black (0) -> RGB(0, 0, 0)
-        $grayBlack = new Gray(0);
-        $this->assertEquals(
-            new Rgb(0, 0, 0),
-            $grayBlack->toRgb(),
-            'Gray Black to RGB',
-        );
-
-        // White (100) -> RGB(255, 255, 255)
-        // 100 * 255 / 100 = 255
-        $grayWhite = new Gray(100);
-        $this->assertEquals(
+it('converts gray to rgb', function (): void {
+    expect(
+        new Gray(0)->toRgb(),
+    )->toEqual(
+        new Rgb(0, 0, 0),
+    )
+        ->and(
+            new Gray(100)->toRgb(),
+        )->toEqual(
             new Rgb(255, 255, 255),
-            $grayWhite->toRgb(),
-            'Gray White to RGB',
-        );
-
-        // Midpoint (50) -> RGB(128, 128, 128)
-        // Check for precision and rounding: 50 * 255 / 100 = 127.5 -> round(127.5) = 128
-        $grayMiddle = new Gray(50);
-        $this->assertEquals(
+        )
+        ->and(
+            new Gray(50)->toRgb(),
+        )->toEqual(
             new Rgb(128, 128, 128),
-            $grayMiddle->toRgb(),
-            'Gray 50 to RGB (rounding check)',
-        );
-
-        // Custom value (90) -> RGB(230, 230, 230)
-        // Check for precision and rounding: 90 * 255 / 100 = 229.5 -> round(229.5) = 230
-        $grayCustom = new Gray(90);
-        $this->assertEquals(
+        )
+        ->and(
+            new Gray(90)->toRgb(),
+        )->toEqual(
             new Rgb(230, 230, 230),
-            $grayCustom->toRgb(),
-            'Gray Custom to RGB (rounding check)',
         );
-    }
+});
 
-    /**
-     * Tests Gray to CMYK conversion (K=100-Gray).
-     */
-    public function test_to_cmyk(): void
-    {
-        // Black (0) -> K:100
-        $grayBlack = new Gray(0);
-        $this->assertEquals(
-            new Cmyk(0, 0, 0, 100),
-            $grayBlack->toCmyk(),
-            'Gray Black to CMYK',
-        );
-
-        // White (100) -> K:0
-        $grayWhite = new Gray(100);
-        $this->assertEquals(
+it('converts gray to cmyk', function (): void {
+    expect(
+        new Gray(0)->toCmyk(),
+    )->toEqual(
+        new Cmyk(0, 0, 0, 100),
+    )
+        ->and(
+            new Gray(100)->toCmyk(),
+        )->toEqual(
             new Cmyk(0, 0, 0, 0),
-            $grayWhite->toCmyk(),
-            'Gray White to CMYK',
-        );
-
-        // Middle (50) -> K:50
-        $grayMiddle = new Gray(50);
-        $this->assertEquals(
+        )
+        ->and(
+            new Gray(50)->toCmyk(),
+        )->toEqual(
             new Cmyk(0, 0, 0, 50),
-            $grayMiddle->toCmyk(),
-            'Gray Middle to CMYK',
         );
-    }
+});
 
-    public function test_to_gray(): void
-    {
-        $gray = new Gray(75);
-        $this->assertSame($gray, $gray->toGray(), 'toGray should return $this');
-    }
-}
+it('returns itself from toGray', function (): void {
+    $gray = new Gray(75);
+
+    expect($gray->toGray())->toBe($gray);
+});

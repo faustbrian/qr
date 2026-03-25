@@ -7,100 +7,85 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Generator\Common;
-
 use Cline\Qr\Generator\Common\ErrorCorrectionLevel;
 use Cline\Qr\Generator\Common\FormatInformation;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @author Brian Faust <brian@cline.sh>
- * @internal
- */
-final class FormatInformationTest extends TestCase
-{
-    private const int MASKED_TEST_FORMAT_INFO = 0x2B_ED;
+const MASKED_TEST_FORMAT_INFO = 0x2B_ED;
+const UNMASKED_TEST_FORMAT_INFO = MASKED_TEST_FORMAT_INFO ^ 0x54_12;
 
-    private const mixed UNMAKSED_TEST_FORMAT_INFO = self::MASKED_TEST_FORMAT_INFO ^ 0x54_12;
+test('bits differing', function (): void {
+    $this->assertSame(0, FormatInformation::numBitsDiffering(1, 1));
+    $this->assertSame(1, FormatInformation::numBitsDiffering(0, 2));
+    $this->assertSame(2, FormatInformation::numBitsDiffering(1, 2));
+    $this->assertSame(32, FormatInformation::numBitsDiffering(-1, 0));
+});
 
-    public function test_bits_differing(): void
-    {
-        $this->assertSame(0, FormatInformation::numBitsDiffering(1, 1));
-        $this->assertSame(1, FormatInformation::numBitsDiffering(0, 2));
-        $this->assertSame(2, FormatInformation::numBitsDiffering(1, 2));
-        $this->assertSame(32, FormatInformation::numBitsDiffering(-1, 0));
-    }
+test('decode', function (): void {
+    $expected = FormatInformation::decodeFormatInformation(
+        MASKED_TEST_FORMAT_INFO,
+        MASKED_TEST_FORMAT_INFO,
+    );
 
-    public function test_decode(): void
-    {
-        $expected = FormatInformation::decodeFormatInformation(
-            self::MASKED_TEST_FORMAT_INFO,
-            self::MASKED_TEST_FORMAT_INFO,
-        );
+    $this->assertInstanceOf(FormatInformation::class, $expected);
+    $this->assertSame(7, $expected->getDataMask());
+    $this->assertSame(ErrorCorrectionLevel::Q, $expected->getErrorCorrectionLevel());
 
-        $this->assertInstanceOf(FormatInformation::class, $expected);
-        $this->assertSame(7, $expected->getDataMask());
-        $this->assertSame(ErrorCorrectionLevel::Q, $expected->getErrorCorrectionLevel());
+    $this->assertEquals(
+        $expected,
+        FormatInformation::decodeFormatInformation(
+            UNMASKED_TEST_FORMAT_INFO,
+            MASKED_TEST_FORMAT_INFO,
+        ),
+    );
+});
 
-        $this->assertEquals(
-            $expected,
-            FormatInformation::decodeFormatInformation(
-                self::UNMAKSED_TEST_FORMAT_INFO,
-                self::MASKED_TEST_FORMAT_INFO,
-            ),
-        );
-    }
+test('decode with bit difference', function (): void {
+    $expected = FormatInformation::decodeFormatInformation(
+        MASKED_TEST_FORMAT_INFO,
+        MASKED_TEST_FORMAT_INFO,
+    );
 
-    public function test_decode_with_bit_difference(): void
-    {
-        $expected = FormatInformation::decodeFormatInformation(
-            self::MASKED_TEST_FORMAT_INFO,
-            self::MASKED_TEST_FORMAT_INFO,
-        );
+    $this->assertEquals(
+        $expected,
+        FormatInformation::decodeFormatInformation(
+            MASKED_TEST_FORMAT_INFO ^ 0x1,
+            MASKED_TEST_FORMAT_INFO ^ 0x1,
+        ),
+    );
+    $this->assertEquals(
+        $expected,
+        FormatInformation::decodeFormatInformation(
+            MASKED_TEST_FORMAT_INFO ^ 0x3,
+            MASKED_TEST_FORMAT_INFO ^ 0x3,
+        ),
+    );
+    $this->assertEquals(
+        $expected,
+        FormatInformation::decodeFormatInformation(
+            MASKED_TEST_FORMAT_INFO ^ 0x7,
+            MASKED_TEST_FORMAT_INFO ^ 0x7,
+        ),
+    );
+    $this->assertNotInstanceOf(
+        FormatInformation::class,
+        FormatInformation::decodeFormatInformation(
+            MASKED_TEST_FORMAT_INFO ^ 0xF,
+            MASKED_TEST_FORMAT_INFO ^ 0xF,
+        ),
+    );
+});
 
-        $this->assertEquals(
-            $expected,
-            FormatInformation::decodeFormatInformation(
-                self::MASKED_TEST_FORMAT_INFO ^ 0x1,
-                self::MASKED_TEST_FORMAT_INFO ^ 0x1,
-            ),
-        );
-        $this->assertEquals(
-            $expected,
-            FormatInformation::decodeFormatInformation(
-                self::MASKED_TEST_FORMAT_INFO ^ 0x3,
-                self::MASKED_TEST_FORMAT_INFO ^ 0x3,
-            ),
-        );
-        $this->assertEquals(
-            $expected,
-            FormatInformation::decodeFormatInformation(
-                self::MASKED_TEST_FORMAT_INFO ^ 0x7,
-                self::MASKED_TEST_FORMAT_INFO ^ 0x7,
-            ),
-        );
-        $this->assertNotInstanceOf(
-            FormatInformation::class,
-            FormatInformation::decodeFormatInformation(
-                self::MASKED_TEST_FORMAT_INFO ^ 0xF,
-                self::MASKED_TEST_FORMAT_INFO ^ 0xF,
-            ),
-        );
-    }
+test('decode with mis read', function (): void {
+    $expected = FormatInformation::decodeFormatInformation(
+        MASKED_TEST_FORMAT_INFO,
+        MASKED_TEST_FORMAT_INFO,
+    );
 
-    public function test_decode_with_mis_read(): void
-    {
-        $expected = FormatInformation::decodeFormatInformation(
-            self::MASKED_TEST_FORMAT_INFO,
-            self::MASKED_TEST_FORMAT_INFO,
-        );
-
-        $this->assertEquals(
-            $expected,
-            FormatInformation::decodeFormatInformation(
-                self::MASKED_TEST_FORMAT_INFO ^ 0x3,
-                self::MASKED_TEST_FORMAT_INFO ^ 0xF,
-            ),
-        );
-    }
-}
+    $this->assertEquals(
+        $expected,
+        FormatInformation::decodeFormatInformation(
+            MASKED_TEST_FORMAT_INFO ^ 0x3,
+            MASKED_TEST_FORMAT_INFO ^ 0xF,
+        ),
+    );
+});

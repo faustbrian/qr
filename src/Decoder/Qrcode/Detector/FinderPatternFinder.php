@@ -11,7 +11,9 @@ namespace Cline\Qr\Decoder\Qrcode\Detector;
 
 use Cline\Qr\Decoder\Common\BitMatrix;
 use Cline\Qr\Decoder\NotFoundException;
+use Cline\Qr\Decoder\NullResultPointCallback;
 use Cline\Qr\Decoder\ResultPoint;
+use Cline\Qr\Decoder\ResultPointCallback;
 
 use const NAN;
 
@@ -61,7 +63,7 @@ final class FinderPatternFinder
      */
     public function __construct(
         private $image,
-        private $resultPointCallback = null,
+        private readonly ResultPointCallback $resultPointCallback = new NullResultPointCallback(),
     ) {
         // new ArrayList<>();
         $this->crossCheckStateCount = fill_array(0, 5, 0);
@@ -340,10 +342,7 @@ final class FinderPatternFinder
                 if (!$found) {
                     $point = new FinderPattern($centerJ, $centerI, $estimatedModuleSize);
                     $this->possibleCenters[] = $point;
-
-                    if ($this->resultPointCallback !== null) {
-                        $this->resultPointCallback->foundPossibleResultPoint($point);
-                    }
+                    $this->resultPointCallback->foundPossibleResultPoint($point);
                 }
 
                 return true;

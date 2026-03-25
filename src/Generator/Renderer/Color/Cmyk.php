@@ -9,9 +9,6 @@
 
 namespace Cline\Qr\Generator\Renderer\Color;
 
-use Cline\Qr\Generator\Internal\Exception;
-use Exception\InvalidArgumentException;
-
 use function round;
 
 /**
@@ -25,36 +22,33 @@ use function round;
  */
 final class Cmyk implements ColorInterface
 {
+    private readonly Percentage $cyan;
+
+    private readonly Percentage $magenta;
+
+    private readonly Percentage $yellow;
+
+    private readonly Percentage $black;
+
     /**
      * @param int $cyan    Cyan percentage from `0` to `100`
      * @param int $magenta Magenta percentage from `0` to `100`
      * @param int $yellow  Yellow percentage from `0` to `100`
      * @param int $black   Black percentage from `0` to `100`
      *
-     * @throws Exception\InvalidArgumentException if any channel falls outside
-     *                                            the supported percentage range
+     * @throws \Cline\Qr\Generator\Internal\Exception\InvalidArgumentException if any channel falls outside
+     *                                                                         the supported percentage range
      */
     public function __construct(
-        private readonly int $cyan,
-        private readonly int $magenta,
-        private readonly int $yellow,
-        private readonly int $black,
+        int $cyan,
+        int $magenta,
+        int $yellow,
+        int $black,
     ) {
-        if ($cyan < 0 || $cyan > 100) {
-            throw InvalidArgumentException::withMessage('Cyan must be between 0 and 100');
-        }
-
-        if ($magenta < 0 || $magenta > 100) {
-            throw InvalidArgumentException::withMessage('Magenta must be between 0 and 100');
-        }
-
-        if ($yellow < 0 || $yellow > 100) {
-            throw InvalidArgumentException::withMessage('Yellow must be between 0 and 100');
-        }
-
-        if ($black < 0 || $black > 100) {
-            throw InvalidArgumentException::withMessage('Black must be between 0 and 100');
-        }
+        $this->cyan = new Percentage($cyan);
+        $this->magenta = new Percentage($magenta);
+        $this->yellow = new Percentage($yellow);
+        $this->black = new Percentage($black);
     }
 
     /**
@@ -62,7 +56,7 @@ final class Cmyk implements ColorInterface
      */
     public function getCyan(): int
     {
-        return $this->cyan;
+        return $this->cyan->value();
     }
 
     /**
@@ -70,7 +64,7 @@ final class Cmyk implements ColorInterface
      */
     public function getMagenta(): int
     {
-        return $this->magenta;
+        return $this->magenta->value();
     }
 
     /**
@@ -78,7 +72,7 @@ final class Cmyk implements ColorInterface
      */
     public function getYellow(): int
     {
-        return $this->yellow;
+        return $this->yellow->value();
     }
 
     /**
@@ -86,7 +80,7 @@ final class Cmyk implements ColorInterface
      */
     public function getBlack(): int
     {
-        return $this->black;
+        return $this->black->value();
     }
 
     /**
@@ -97,10 +91,10 @@ final class Cmyk implements ColorInterface
      */
     public function toRgb(): Rgb
     {
-        $c = $this->cyan / 100;
-        $m = $this->magenta / 100;
-        $y = $this->yellow / 100;
-        $k = $this->black / 100;
+        $c = $this->cyan->asFraction();
+        $m = $this->magenta->asFraction();
+        $y = $this->yellow->asFraction();
+        $k = $this->black->asFraction();
 
         return new Rgb(
             (int) round(255 * (1 - $c) * (1 - $k)),

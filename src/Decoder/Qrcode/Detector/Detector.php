@@ -14,12 +14,13 @@ use Cline\Qr\Decoder\Common\BitMatrix;
 use Cline\Qr\Decoder\Common\Detector\MathUtils;
 use Cline\Qr\Decoder\Common\DetectorResult;
 use Cline\Qr\Decoder\Common\PerspectiveTransform;
-use Cline\Qr\Decoder\DecodeHintType;
 use Cline\Qr\Decoder\FormatException;
 use Cline\Qr\Decoder\NotFoundException;
+use Cline\Qr\Decoder\NullResultPointCallback;
 use Cline\Qr\Decoder\Qrcode\Decoder\Version;
 use Cline\Qr\Decoder\ResultPoint;
 use Cline\Qr\Decoder\ResultPointCallback;
+use Cline\Qr\Decoder\ResultPointCallbackAdapter;
 
 use const NAN;
 
@@ -28,7 +29,9 @@ use function array_key_exists;
 use function count;
 use function is_countable;
 use function is_nan;
+use function is_object;
 use function max;
+use function method_exists;
 use function min;
 use function round;
 
@@ -43,14 +46,16 @@ use function round;
  */
 final class Detector
 {
-    private $resultPointCallback;
+    private ResultPointCallback $resultPointCallback;
 
     /**
      * @param BitMatrix $image Binarized image to inspect.
      */
     public function __construct(
         private readonly BitMatrix $image,
-    ) {}
+    ) {
+        $this->resultPointCallback = new NullResultPointCallback();
+    }
 
     /**
      * Detect a QR Code and return the sampled bits plus the detected points.
@@ -64,13 +69,8 @@ final class Detector
      */
     public function detect(?array $hints = null): DetectorResult
     {/* Map<DecodeHintType,?> */
-        $resultPointCallback = ($hints !== null && array_key_exists('NEED_RESULT_POINT_CALLBACK', $hints)) ?
-            $hints['NEED_RESULT_POINT_CALLBACK'] : null;
-        /*
-                * resultPointCallback = hints == null ? null :
-                (ResultPointCallback) hints.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
-                */
-        $finder = new FinderPatternFinder($this->image, $resultPointCallback);
+        $this->resultPointCallback = self::resolveResultPointCallback($hints);
+        $finder = new FinderPatternFinder($this->image, $this->resultPointCallback);
         $info = $finder->find($hints);
 
         return $this->processFinderPatternInfo($info);
@@ -228,6 +228,28 @@ final class Detector
     protected function getResultPointCallback()
     {
         return $this->resultPointCallback;
+    }
+
+    /**
+     * Normalize the optional hint callback into the internal callback contract.
+     */
+    private static function resolveResultPointCallback(?array $hints): ResultPointCallback
+    {
+        if ($hints === null || !array_key_exists('NEED_RESULT_POINT_CALLBACK', $hints)) {
+            return new NullResultPointCallback();
+        }
+
+        $callback = $hints['NEED_RESULT_POINT_CALLBACK'];
+
+        if ($callback instanceof ResultPointCallback) {
+            return $callback;
+        }
+
+        if (is_object($callback) && method_exists($callback, 'foundPossibleResultPoint')) {
+            return new ResultPointCallbackAdapter($callback);
+        }
+
+        return new NullResultPointCallback();
     }
 
     /**

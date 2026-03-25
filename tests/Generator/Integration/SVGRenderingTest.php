@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Generator\Integration;
-
 use Cline\Qr\Generator\Renderer\Color\Rgb;
 use Cline\Qr\Generator\Renderer\Image\SvgImageBackEnd;
 use Cline\Qr\Generator\Renderer\ImageRenderer;
@@ -18,23 +16,41 @@ use Cline\Qr\Generator\Renderer\RendererStyle\Gradient;
 use Cline\Qr\Generator\Renderer\RendererStyle\GradientType;
 use Cline\Qr\Generator\Renderer\RendererStyle\RendererStyle;
 use Cline\Qr\Generator\Writer;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\TestCase;
 use Tests\Generator\Support\MatchesQrSnapshots;
 
-/**
- * @author Brian Faust <brian@cline.sh>
- * @internal
- */
-#[Group('integration')]
-final class SVGRenderingTest extends TestCase
-{
-    use MatchesQrSnapshots;
+uses(MatchesQrSnapshots::class);
 
-    public function test_generic_qr_code(): void
-    {
+test('test_generic_qr_code', function (): void {
+    $renderer = new ImageRenderer(
+        new RendererStyle(400),
+        new SvgImageBackEnd(),
+    );
+    $writer = new Writer($renderer);
+    $svg = $writer->writeString('Hello World!');
+
+    $this->assertMatchesXmlSnapshot($svg);
+})->group('integration');
+
+test('test_qr_with_gradient_generates_different_ids_for_different_gradients', function (): void {
+    $types = [GradientType::HORIZONTAL, GradientType::VERTICAL];
+
+    foreach ($types as $type) {
+        $gradient = new Gradient(
+            new Rgb(0, 0, 0),
+            new Rgb(255, 0, 0),
+            $type,
+        );
         $renderer = new ImageRenderer(
-            new RendererStyle(400),
+            new RendererStyle(
+                size: 400,
+                fill: Fill::withForegroundGradient(
+                    new Rgb(255, 255, 255),
+                    $gradient,
+                    EyeFill::inherit(),
+                    EyeFill::inherit(),
+                    EyeFill::inherit(),
+                ),
+            ),
             new SvgImageBackEnd(),
         );
         $writer = new Writer($renderer);
@@ -42,34 +58,4 @@ final class SVGRenderingTest extends TestCase
 
         $this->assertMatchesXmlSnapshot($svg);
     }
-
-    public function test_qr_with_gradient_generates_different_ids_for_different_gradients(): void
-    {
-        $types = [GradientType::HORIZONTAL, GradientType::VERTICAL];
-
-        foreach ($types as $type) {
-            $gradient = new Gradient(
-                new Rgb(0, 0, 0),
-                new Rgb(255, 0, 0),
-                $type,
-            );
-            $renderer = new ImageRenderer(
-                new RendererStyle(
-                    size: 400,
-                    fill: Fill::withForegroundGradient(
-                        new Rgb(255, 255, 255),
-                        $gradient,
-                        EyeFill::inherit(),
-                        EyeFill::inherit(),
-                        EyeFill::inherit(),
-                    ),
-                ),
-                new SvgImageBackEnd(),
-            );
-            $writer = new Writer($renderer);
-            $svg = $writer->writeString('Hello World!');
-
-            $this->assertMatchesXmlSnapshot($svg);
-        }
-    }
-}
+})->group('integration');

@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Promoted additional immutable decoder and renderer constructor state to
   `readonly` so low-level value objects and helpers enforce their
   write-once semantics in PHP.
+- Extracted a shared renderer `Percentage` value object so alpha, gray,
+  and CMYK colors centralize their `0..100` validation and percentage
+  math instead of repeating primitive range checks.
+- Replaced nullable QR detector result-point callbacks with an explicit
+  null object, preserved callback hints during alignment-pattern
+  detection, and stopped treating arbitrary decode hints as
+  `mb_detect_encoding()` candidate lists.
 - Fixed PHP 8.5 decoder compatibility for unlimited-memory environments
   by honoring `memory_limit=-1` in the Imagick luminance source and
   replacing grayscale averaging paths that relied on implicit float-to-int

@@ -9,9 +9,6 @@
 
 namespace Cline\Qr\Generator\Renderer\Color;
 
-use Cline\Qr\Generator\Internal\Exception;
-use Exception\InvalidArgumentException;
-
 /**
  * Decorate another renderer color with an explicit opacity percentage.
  *
@@ -23,19 +20,19 @@ use Exception\InvalidArgumentException;
  */
 final class Alpha implements ColorInterface
 {
+    private readonly Percentage $alpha;
+
     /**
      * @param int $alpha Opacity percentage from `0` to `100`.
      *
-     * @throws Exception\InvalidArgumentException if alpha is outside the valid
-     *                                            percentage range
+     * @throws \Cline\Qr\Generator\Internal\Exception\InvalidArgumentException if alpha is outside the valid
+     *                                                                         percentage range
      */
     public function __construct(
-        private readonly int $alpha,
+        int $alpha,
         private readonly ColorInterface $baseColor,
     ) {
-        if ($alpha < 0 || $alpha > 100) {
-            throw InvalidArgumentException::withMessage('Alpha must be between 0 and 100');
-        }
+        $this->alpha = new Percentage($alpha);
     }
 
     /**
@@ -43,7 +40,7 @@ final class Alpha implements ColorInterface
      */
     public function getAlpha(): int
     {
-        return $this->alpha;
+        return $this->alpha->value();
     }
 
     /**

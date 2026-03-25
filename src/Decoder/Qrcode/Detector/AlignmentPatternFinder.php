@@ -10,6 +10,8 @@
 namespace Cline\Qr\Decoder\Qrcode\Detector;
 
 use Cline\Qr\Decoder\NotFoundException;
+use Cline\Qr\Decoder\NullResultPointCallback;
+use Cline\Qr\Decoder\ResultPointCallback;
 
 use const NAN;
 
@@ -51,7 +53,7 @@ final class AlignmentPatternFinder
         private $width,
         private $height,
         private $moduleSize,
-        private $resultPointCallback,
+        private readonly ResultPointCallback $resultPointCallback = new NullResultPointCallback(),
     ) {}
 
     /**
@@ -204,10 +206,7 @@ final class AlignmentPatternFinder
             // Hadn't found this before; save it
             $point = new AlignmentPattern($centerJ, $centerI, $estimatedModuleSize);
             $this->possibleCenters[] = $point;
-
-            if ($this->resultPointCallback !== null) {
-                $this->resultPointCallback->foundPossibleResultPoint($point);
-            }
+            $this->resultPointCallback->foundPossibleResultPoint($point);
         }
 
         return null;
