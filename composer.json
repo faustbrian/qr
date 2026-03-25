@@ -1,0 +1,65 @@
+{
+    "name": "cline/qr",
+    "description": "Standalone QR code generation and decoding package.",
+    "license": "MIT",
+    "keywords": [
+        "php"
+    ],
+    "authors": [
+        {
+            "name": "Brian Faust",
+            "email": "brian@cline.sh"
+        }
+    ],
+    "require": {
+        "php": "^8.5.0",
+        "ext-iconv": "*"
+    },
+    "require-dev": {
+        "cline/coding-standard": "^2.0.1",
+        "ext-gd": "*",
+        "setasign/fpdf": "^1.8.2",
+        "symfony/var-dumper": "^7.4.0 || ^8.0"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "files": [
+            "src/Decoder/Common/customFunctions.php"
+        ],
+        "psr-4": {
+            "Cline\\Qr\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "files": [
+            "tests/Support/helpers.php"
+        ],
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "lint": "vendor/bin/ecs check --fix",
+        "refactor": "rector",
+        "test": [
+            "@test:lint",
+            "@test:type-coverage",
+            "@test:unit",
+            "@test:types",
+            "@test:refactor"
+        ],
+        "test:lint": "vendor/bin/ecs check",
+        "test:refactor": "rector --dry-run",
+        "test:type-coverage": "pest --parallel --min=80 --type-coverage",
+        "test:types": "phpstan",
+        "test:unit": "pest --parallel --min=63 --coverage"
+    }
+}
