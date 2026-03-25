@@ -1,0 +1,19 @@
+parameters:
+    level: max
+    paths:
+        - src/Builder
+        - src/Color
+        - src/Encoding
+        - src/Exception
+        - src/Generator/ErrorCorrectionLevelConverter.php
+        - src/Generator/MatrixFactory.php
+        - src/ImageData
+        - src/Label
+        - src/Logo
+        - src/Matrix
+        - src/Writer
+        - src/ErrorCorrectionLevel.php
+        - src/QrCode.php
+        - src/QrCodeInterface.php
+        - src/RoundBlockSizeMode.php
+    reportUnmatchedIgnoredErrors: true
